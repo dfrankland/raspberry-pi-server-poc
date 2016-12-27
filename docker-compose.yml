@@ -1,0 +1,29 @@
+version: '2'
+services:
+  openvpn:
+    cap_add:
+      - NET_ADMIN
+    image: kylemanna/openvpn
+    restart: always
+    volumes:
+      - ./openvpn/conf:/etc/openvpn
+  nginx:
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    build: ./nginx
+    ports:
+      - "80:80"
+    restart: always
+    links:
+      - openvpn
+  raspberrypi:
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    build: ./raspberrypi
+    restart: always
+    links:
+      - openvpn
